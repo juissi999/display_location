@@ -35,7 +35,7 @@
         
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
             }
             else { 
                 msgElement.innerHTML = "Geolocation is not supported by this browser.";
@@ -49,6 +49,23 @@
             map.setView([position.coords.latitude, position.coords.longitude], 9);
             //map.flyTo([position.coords.latitude, position.coords.longitude], 13)
         }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                msgElement.innerHTML = "User denied the request for Geolocation."
+                break;
+                case error.POSITION_UNAVAILABLE:
+                msgElement.innerHTML = "Location information is unavailable."
+                break;
+                case error.TIMEOUT:
+                msgElement.innerHTML = "The request to get user location timed out."
+                break;
+                case error.UNKNOWN_ERROR:
+                msgElement.innerHTML = "An unknown error occurred."
+                break;
+            }
+            }
 
         getLocation()
 
