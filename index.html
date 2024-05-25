@@ -6,10 +6,10 @@
     <title>Display location</title>
 </head>
 <style>
-    html, body {height:100%;}
-   /* #map { height: 680px; } */
-   #map { height: 90%; }
-   #message { height: 5%; }
+    html, body {height:100%}
+   /* #map { height: 680px } */
+   #map { height: 90% }
+   #message { height: 5% }
 </style>
 <body>    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -22,52 +22,67 @@
     
 
     <div id="map"></div>
-    <div id="message"></div>
+    <div id="coordinates"></div>
     
     <script>
-        var map = L.map('map').setView([51.505, -0.09], 3);
+        var map = L.map('map').setView([51.505, -0.09], 3)
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
+        attribution: '&copy <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map)
 
-        const msgElement = document.getElementById("message");
+        const coordinatesElement = document.getElementById("coordinates")
         
-        function getLocation() {
+        let firstLocation = true
+        let marker
+
+        function initializeLocation() {
+            const options = {
+                enableHighAccuracy: false,
+                timeout: 5000,
+                maximumAge: 0,
+            }
+
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
+                navigator.geolocation.watchPosition(showPosition, showError, options)
             }
             else { 
-                msgElement.innerHTML = "Geolocation is not supported by this browser.";
+                coordinatesElement.innerHTML = "Geolocation is not supported by this browser."
             }
         }
         
         function showPosition(position) {
 
-            msgElement.innerHTML = "You are located on latitude: " + position.coords.latitude + ", longitude: " + position.coords.longitude;
-            L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
-            map.setView([position.coords.latitude, position.coords.longitude], 9);
-            //map.flyTo([position.coords.latitude, position.coords.longitude], 13)
+            coordinatesElement.innerHTML = "You are located on latitude: " + position.coords.latitude + ", longitude: " + position.coords.longitude
+
+            if (firstLocation) {
+                marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
+                map.setView([position.coords.latitude, position.coords.longitude], 9)
+                firstLocation = false
+            } else {
+                marker.setLatLng([position.coords.latitude, position.coords.longitude])
+            }
+
         }
 
         function showError(error) {
             switch(error.code) {
                 case error.PERMISSION_DENIED:
-                msgElement.innerHTML = "User denied the request for Geolocation."
-                break;
+                coordinatesElement.innerHTML = "User denied the request for Geolocation."
+                break
                 case error.POSITION_UNAVAILABLE:
-                msgElement.innerHTML = "Location information is unavailable."
-                break;
+                coordinatesElement.innerHTML = "Location information is unavailable."
+                break
                 case error.TIMEOUT:
-                msgElement.innerHTML = "The request to get user location timed out."
-                break;
+                coordinatesElement.innerHTML = "The request to get user location timed out."
+                break
                 case error.UNKNOWN_ERROR:
-                msgElement.innerHTML = "An unknown error occurred."
-                break;
+                coordinatesElement.innerHTML = "An unknown error occurred."
+                break
             }
             }
 
-        getLocation()
+        initializeLocation()
 
     </script>
     
