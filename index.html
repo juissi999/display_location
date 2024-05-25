@@ -23,6 +23,7 @@
 
     <div id="map"></div>
     <div id="coordinates"></div>
+    <div id="speed"></div>
     
     <script>
         var map = L.map('map').setView([51.505, -0.09], 3)
@@ -32,6 +33,7 @@
         }).addTo(map)
 
         const coordinatesElement = document.getElementById("coordinates")
+        const speedElement = document.getElementById("speed")
         
         let firstLocation = true
         let marker
@@ -54,6 +56,7 @@
         function showPosition(position) {
 
             coordinatesElement.innerHTML = "You are located on latitude: " + position.coords.latitude + ", longitude: " + position.coords.longitude
+            speedElement.innerHTML = position.coords.speed?"Your speed is: " + position.coords.speed : "Your device does not support speed."
 
             if (firstLocation) {
                 marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
