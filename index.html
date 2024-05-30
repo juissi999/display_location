@@ -26,11 +26,34 @@
     <div id="speed"></div>
     
     <script>
-        var map = L.map('map').setView([51.505, -0.09], 3)
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map)
+
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        })
+
+        var osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'})
+
+        var openTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
+        })
+
+        var map = L.map('map', {
+            center: [51.505, -0.09],
+            zoom: 3,
+            layers: [osm]
+        })
+
+        var baseMaps = {
+            "OpenStreetMap": osm,
+            "OpenStreetMap.HOT": osmHOT,
+            "OpenTopoMap": openTopoMap
+        }
+
+        var layerControl = L.control.layers(baseMaps).addTo(map)
 
         const coordinatesElement = document.getElementById("coordinates")
         const speedElement = document.getElementById("speed")
