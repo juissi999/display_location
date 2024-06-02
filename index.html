@@ -24,7 +24,7 @@
     <div id="map"></div>
     <div id="coordinates"></div>
     <div id="speed"></div>
-    
+
     <script>
 
         var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -79,6 +79,7 @@
         function showPosition(position) {
 
             coordinatesElement.innerHTML = "You are located on latitude: " + position.coords.latitude + ", longitude: " + position.coords.longitude
+            coordinatesElement.innerHTML += position.coords.altitude?"<br>Your altitude is: " + position.coords.altitude: "<br>Your device does not support altitude."
             speedElement.innerHTML = position.coords.speed?"Your speed is: " + position.coords.speed : "Your device does not support speed."
 
             if (firstLocation) {
